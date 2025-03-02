@@ -30,9 +30,12 @@ const useCategories = () => {
         ...prev,
         total: response.data.meta.total,
       }));
+      setError(null);
+      return response.data.data; // Return the fetched data
     } catch (err) {
       setError('Failed to fetch categories');
       console.error(err);
+      return []; // Return empty array on error
     } finally {
       setLoading(false);
     }
@@ -77,6 +80,7 @@ const useCategories = () => {
     loading,
     error,
     pagination,
+    fetchCategories,
     setPage: (page: number) => setPagination(prev => ({ ...prev, page })),
     setPerPage: (perPage: number) => setPagination(prev => ({ ...prev, perPage })),
     createCategory,

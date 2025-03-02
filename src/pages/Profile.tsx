@@ -23,7 +23,7 @@ export default function Profile() {
   return (
     <div>
       <h2>Profile</h2>
-      {error && <p className="error">{error}</p>}
+      {error && <p className="error">{error}</p>}+
       {profileData ? (
         <div>
           <p>Name: {profileData.name}</p>

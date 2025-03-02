@@ -9,7 +9,8 @@ const AuthContext = createContext<AuthContextType>(null!)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<null | any>(null)
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'))
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [loading, setLoading] = useState(true);
 
   const login = (token: string, userData: User) => {
     localStorage.setItem('token', token);
@@ -21,23 +22,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
 
   const logout = () => {
-    localStorage.removeItem('token')
-    setToken(null)
-    setUser(null)
-  }
-
+    localStorage.removeItem('token');
+    setToken(null);
+    setUser(null);
+    delete api.defaults.headers.common['Authorization'];
+  };
   useEffect(() => {
-    if (token) {
-      // Use the configured api instance instead of axios directly
-      api.get(`/users/${user?.id}`) // Should point to your backend endpoint
-        .then(res => setUser(res.data))
-        .catch((err) => {
-          console.error('User fetch error:', err);
-          logout();
-        });
-    }
-  }, [token, user?.id]);
+    const loadUser = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/users/${user?.id}`); // Change to your auth endpoint
+        setUser(response.data);
+      } catch (error) {
+        console.error('Authentication check failed:', error);
+        logout();
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    if (token && !user) {
+      loadUser();
+    } else {
+      setLoading(false);
+    }
+  }, [token]);
   return (
     <AuthContext.Provider value={{ user, token, login, logout }}>
       {children}

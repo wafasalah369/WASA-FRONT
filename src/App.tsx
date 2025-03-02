@@ -9,6 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import CategoriesPage from './pages/CategoriesPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import ProductsPage from './pages/ProductsPage';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
         </Route>
         <Route path="/categories" element={<CategoriesPage />} />
+        <Route path="/products" element={<ProductsPage />} />
       </Routes>
     </AuthProvider>
   )
